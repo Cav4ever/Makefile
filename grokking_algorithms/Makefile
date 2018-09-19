@@ -1,29 +1,31 @@
-######### 标准Makefile Lv1 ########  
-EXTENSION=c
-CC=gcc
-EXE=main
-SUBDIR=src
-OBJ = ./obj
-DEP = ./dep
+######### Makefile COMMON ########  
+EXTENSION = c
+CC = gcc
+EXE = main
+SUBDIR = src
+OBJ = obj
+DEP = dep
 
-#CXXFLAGS:编译选项, LDFLAGS:链接选项  
-CXXFLAGS += -I /home/kouwq/test/grokking_algorithms/inc
+CPPFLAGS += -I /home/kouwq/Makefile/grokking_algorithms/inc
 #LDFLAGS +=
-
-CXX_SOURCES =$(foreach dir,$(SUBDIR), $(wildcard $(dir)/*$(EXTENSION)))
-CXX_OBJECTS=$(patsubst  %.$(EXTENSION), ${OBJ}/%.o, $(notdir $(CXX_SOURCES)))
-DEP_FILES  =$(patsubst  %.$(EXTENSION), ${DEP}/%.d, $(notdir $(CXX_SOURCES)))
+#CFLAGS += -g -Wall
+CXX_SOURCES = $(foreach dir,$(SUBDIR), $(wildcard $(dir)/*.$(EXTENSION)))
+CXX_OBJECTS = $(patsubst  %.$(EXTENSION), $(OBJ)/%.o, $(notdir $(CXX_SOURCES)))
+DEP_FILES  = $(patsubst  %.$(EXTENSION), $(DEP)/%.d, $(notdir $(CXX_SOURCES)))
 
 $(EXE): $(CXX_OBJECTS)
-	$(CC)  $(CXX_OBJECTS) -o $(EXE)
+	$(CC) $(CXX_OBJECTS) -o $(EXE)
 
-${OBJ}/%.o: ${SUBDIR}/%.$(EXTENSION)
-	$(CC)  -c $(CXXFLAGS)  $<  -o  $@
+$(OBJ)/%.o: $(SUBDIR)/%.$(EXTENSION)
+	$(CC) -c $(CPPFLAGS) $< -o $@
 
-${DEP}/%.d: ${SUBDIR}/%.$(EXTENSION)
-	$(CC) $(CXXFLAGS) -MM $< | sed -e 1's,^,$(OBJ)/,' > $@
+$(DEP)/%.d: $(SUBDIR)/%.$(EXTENSION)
+	$(CC) $(CPPFLAGS) -MM $< | sed -e 1's,^,$(OBJ)/,' > $@
 
--include ${DEP_FILES}
+ifneq "$(MAKECMDGOALS)" "clean"
+-include $(DEP_FILES)
+endif
 
+.PHONY:clean
 clean:
-	rm  -rf  $(CXX_OBJECTS)  $(DEP_FILES)  $(EXE)
+	-rm  -f  $(CXX_OBJECTS)  $(DEP_FILES)  $(EXE)
