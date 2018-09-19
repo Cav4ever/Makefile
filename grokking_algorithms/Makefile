@@ -7,7 +7,7 @@ OBJ = ./obj
 DEP = ./dep
 
 #CXXFLAGS:编译选项, LDFLAGS:链接选项  
-CXXFLAGS += -I /home/kouwq/test/grokking_algorithms/inc
+CXXFLAGS += -I /home/kouwq/Makefile/grokking_algorithms/inc
 #LDFLAGS +=
 
 CXX_SOURCES =$(foreach dir,$(SUBDIR), $(wildcard $(dir)/*$(EXTENSION)))
@@ -23,7 +23,9 @@ ${OBJ}/%.o: ${SUBDIR}/%.$(EXTENSION)
 ${DEP}/%.d: ${SUBDIR}/%.$(EXTENSION)
 	$(CC) $(CXXFLAGS) -MM $< | sed -e 1's,^,$(OBJ)/,' > $@
 
--include ${DEP_FILES}
+ifneq "$(MAKECMDGOALS)" "clean"
+-include $(DEP_FILES)
+endif
 
 clean:
 	rm  -rf  $(CXX_OBJECTS)  $(DEP_FILES)  $(EXE)
