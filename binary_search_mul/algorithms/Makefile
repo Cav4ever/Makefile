@@ -1,11 +1,11 @@
-######### 标准Makefile Lv1 ########  
-EXTENSION=c
-CC=gcc
-SUBDIR=src
-OBJ = ./obj
-DEP = ./dep
+######### Makefile MLD ########  
+EXTENSION = c
+CC = gcc
+SUBDIR = src
+OBJ = obj
+DEP = dep
 #CXXFLAGS:编译选项, LDFLAGS:链接选项  
-CXXFLAGS += -I /home/kouwq/test/binary_search_mul/algorithms/include
+CXXFLAGS += -I /home/kouwq/Makefile/binary_search_mul/algorithms/include
 #LDFLAGS +=
 
 CXX_SOURCES =$(foreach dir,$(SUBDIR), $(wildcard $(dir)/*.$(EXTENSION)))
@@ -21,7 +21,10 @@ ${OBJ}/%.o: ${SUBDIR}/%.$(EXTENSION)
 ${DEP}/%.d: ${SUBDIR}/%.$(EXTENSION)
 	$(CC) $(CXXFLAGS) -MM $< | sed -e 1's,^,$(OBJ)/,' > $@
 
--include ${DEP_FILES}
+ifneq "$(MAKECMDGOALS)" "clean"
+-include $(DEP_FILES)
+endif
 
+.PHONY:clean
 clean:
-	rm  -rf  $(CXX_OBJECTS)  $(DEP_FILES)
+	-rm  -f  $(CXX_OBJECTS)  $(DEP_FILES)
