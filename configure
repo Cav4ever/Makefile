@@ -2,7 +2,7 @@
 if ! test -z ${ICP_ROOT}; then :
   :
 else
-  ICP_ROOT=$(echo `find /home/kouwq -name cap.h` | awk '{print $1}' | awk -F'/build/cap.h' '{print $1}')
+  ICP_ROOT=$(echo `find /home/kouwq -name cap.h 2>/dev/null` | awk '{print $1}' | awk -F'/build/cap.h' '{print $1}')
 fi
 if test -d ${ICP_ROOT}/quickassist; then :
     echo "Checking for ICP_ROOT:$ICP_ROOT... OK"
